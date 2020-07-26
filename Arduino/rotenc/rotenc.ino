@@ -53,10 +53,10 @@ void loop()
     Consumer.write(MEDIA_STOP);
 
   else if(index == 400)
-    Keyboard.write(KEY_F16);
+    Keyboard.write(KEY_RIGHT_ARROW);
   else if(index == 401)
-    Keyboard.write(KEY_F17);
+    Keyboard.write(KEY_LEFT_ARROW);
   else if(index == 499)
-    Keyboard.write(KEY_F18);
+    Keyboard.write(' ');
 
 }
