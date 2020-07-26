@@ -1,27 +1,34 @@
+/*  Version 1
+ *  4x Rotary Encoder USB keyboard
+ *  Written by Jacob Jarick
+ *  mem.namefix@gmail.com
+ * https://github.com/jacob-jarick/usb-rotary-keyboard
+ */
+ 
 #include "HID-Project.h"
 #include <CommonBusEncoders.h>
 
 CommonBusEncoders encoders(4, 6, 8, 4);
 
-uint8_t rsteps = 4;
+// set to match your encoders.
+uint8_t rsteps = 2;
+
 void setup() 
 {
-  // check solder jumper. 
-  
   encoders.setDebounce(16);
   encoders.resetChronoAfter(1000);
+
   encoders.addEncoder(1, rsteps, 9, 1, 100,  199);
   encoders.addEncoder(2, rsteps, 10, 1, 200, 299);
-
   encoders.addEncoder(3, rsteps, 11, 1, 300,  399);
   encoders.addEncoder(4, rsteps, 12, 1, 400, 499);
 
+  Consumer.begin();
+  Keyboard.begin();
 
   Serial.begin(9600);
   Serial.println(F("USB Rotary Keyboard v1"));
-  Serial.println(F("Created by Jacob Jarick"));
-  Consumer.begin();
-  Keyboard.begin();
+  Serial.println(F("Created by Jacob Jarick")); 
 }
 
 void loop() 
