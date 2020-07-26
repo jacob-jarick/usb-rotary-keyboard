@@ -7,5 +7,5 @@ Keyboard Mappings:
 |--------|----------------|------------|------------|
 | 1      | Volume Down    | Volume Up  | Mute       |
 | 2      | Media Previous | Media Next | Pause/Play |
-| 3      | F14            | F13        | F15        |
+| 3      | Media FFWD     | Media RWD  | Media Stop |
 | 4      | F17            | F16        | F18        |
