@@ -1,5 +1,6 @@
 /*  Version 1
  *  4x Rotary Encoder USB keyboard
+ *  Board target: Arduino Micro Pro
  *  Written by Jacob Jarick
  *  mem.namefix@gmail.com
  * https://github.com/jacob-jarick/usb-rotary-keyboard
