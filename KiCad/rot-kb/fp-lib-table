@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name Socket_Arduino_Micro)(type KiCad)(uri "$(KIPRJMOD)/Socket_Arduino_Micro.pretty")(options "")(descr ""))
+  (lib (name "My Libs")(type KiCad)(uri "C:/Users/mem/Documents/KiCad/My Libs")(options "")(descr ""))
+)

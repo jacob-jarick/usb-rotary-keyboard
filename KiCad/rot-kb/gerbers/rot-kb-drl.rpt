@@ -1,0 +1,30 @@
+Drill report for C:\Users\mem\Documents\KiCad\rot-kb\rot-kb.kicad_pcb
+Created on 26/07/2020 7:53:48 AM
+
+Copper Layer Stackup:
+    =============================================================
+    L1 :  F.Cu                      front
+    L2 :  B.Cu                      back
+
+
+Drill file 'rot-kb-PTH.drl' contains
+    plated through holes:
+    =============================================================
+    T1  0.40mm  0.016"  (11 holes)
+    T2  0.60mm  0.024"  (16 holes)
+    T3  1.00mm  0.039"  (24 holes)
+    T4  1.02mm  0.040"  (40 holes)
+    T5  1.20mm  0.047"  (3 holes)
+    T6  1.27mm  0.050"  (4 holes)
+    T7  1.50mm  0.059"  (8 holes)  (with 8 slots)
+    T8  4.30mm  0.169"  (2 holes)
+
+    Total plated holes count 108
+
+
+Drill file 'rot-kb-NPTH.drl' contains
+    unplated through holes:
+    =============================================================
+    T1  0.90mm  0.035"  (2 holes)
+
+    Total unplated holes count 2
