@@ -6,7 +6,7 @@ Keyboard mode Mappings:
 |--------|----------------|-----------------|------------|
 | 1      | Volume Down    | Volume Up       | Mute       |
 | 2      | Media Previous | Media Next      | Pause/Play |
-| 3      | Media FFWD     | Media RWD       | Media Stop |
+| 3      | Media RWD      | Media FFWD      | Media Stop |
 | 4      | KEY_LEFT_ARROW | KEY_RIGHT_ARROW | SPACE      |
 
 
