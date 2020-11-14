@@ -14,15 +14,27 @@
 
 #include "HID-Project.h"
 #include <CommonBusEncoders.h>
-
 CommonBusEncoders encoders(4, 6, 8, 4);
 
-uint8_t keya = 19;
-uint8_t keyb = 7;
-uint8_t keyc = 22;
-uint8_t keyd = 5;
+// https://forum.arduino.cc/index.php?topic=324554.0
 
-uint8_t key_debounce = 150;
+#define KEY_F13  0xF0 // 0x68 + 0x88
+#define KEY_F14 0xF1 // 0x69 + 0x88
+#define KEY_F15 0xF2 // 0x6A + 0x88
+#define KEY_F16 0xF3 // 0x6B + 0x88
+#define KEY_F17 0xF4 // 0x6C + 0x88
+#define KEY_F18 0xF5 // 0x6D + 0x88
+
+const uint8_t keya = 19;
+const uint8_t keyb = 7;
+const uint8_t keyc = 22;
+const uint8_t keyd = 5;
+
+const uint8_t dip1 = 23; // rflip (now paste special) - triggers keyC
+const uint8_t dip2 = 21; // mouse
+const uint8_t dip3 = 20; // inc4
+
+const uint8_t key_debounce = 150;
 
 unsigned long keysleep[4] = {0, 0, 0, 0};
 
@@ -30,7 +42,7 @@ unsigned long keysleep[4] = {0, 0, 0, 0};
 uint8_t rsteps = 2;
 
 // these bools will be set via jumpers
-bool alt_steps = 1; // 0 = 2 steps, 1 = 4 steps
+//bool alt_steps = 1; // 0 = 2 steps, 1 = 4 steps
 bool rmouse = 0; // worlds most awkward mouse - etch a sketch style
 
 // internal bools
@@ -44,10 +56,14 @@ void setup()
   pinMode(keyc, INPUT);
   pinMode(keyd, INPUT);
 
+  pinMode(dip1, INPUT);
+  pinMode(dip2, INPUT);
+  pinMode(dip3, INPUT);
+
   encoders.setDebounce(16);
   encoders.resetChronoAfter(1000);
 
-  if (alt_steps)
+  if (digitalRead(dip3))
     rsteps = 4;
 
   encoders.addEncoder(1, rsteps, 12, 1, 100,  199);
@@ -67,39 +83,86 @@ void setup()
 
 void loop()
 {
+  rmouse = digitalRead(dip2);
+  uint8_t alt_keymap = digitalRead(dip1);
+
   // read keys
   if (keysleep[0] < millis() && !digitalRead(keya))
   {
     keysleep[0] = millis() + key_debounce;
-    Serial.println("A");
-    Keyboard.press(KEY_LEFT_CTRL);
-    Keyboard.press('c');
-    delay(100);
-    Keyboard.releaseAll();
+
+    if (alt_keymap)
+    {
+      Serial.println("A - Copy");
+      Keyboard.press(KEY_LEFT_CTRL);
+      Keyboard.press('c');
+      Keyboard.releaseAll();
+    }
+    else
+    {
+      Serial.println("F13");
+      Keyboard.write(KEY_F13);
+    }
   }
   if (keysleep[1] < millis() && !digitalRead(keyb))
   {
     keysleep[1] = millis() + key_debounce;
-    Serial.println("B");
-    Keyboard.press(KEY_LEFT_CTRL);
-    Keyboard.press('x');
-    delay(100);
-    Keyboard.releaseAll();
+
+    if (alt_keymap)
+    {
+      Serial.println("B - Cut");
+      Keyboard.press(KEY_LEFT_CTRL);
+      Keyboard.press('x');
+      Keyboard.releaseAll();
+    }
+    else
+    {
+      Serial.println("F14");
+      Keyboard.write(KEY_F14);
+    }
   }
   if (keysleep[2] < millis() && !digitalRead(keyc))
   {
     keysleep[2] = millis() + key_debounce;
-    Serial.println("C");
-    Keyboard.press(KEY_LEFT_CTRL);
-    Keyboard.press('v');
-    delay(100);
-    Keyboard.releaseAll();
+
+    if (alt_keymap)
+    {
+      Serial.println("C - Paste");
+      Keyboard.press(KEY_LEFT_CTRL);
+      Keyboard.press('v');
+      Keyboard.releaseAll();
+    }
+    else
+    {
+      Serial.println("F15");
+      Keyboard.write(KEY_F15);
+    }
   }
   if (keysleep[3] < millis() && !digitalRead(keyd))
   {
     keysleep[3] = millis() + key_debounce;
-    Keyboard.write(KEY_RETURN);
-    Serial.println("D");
+
+    if (alt_keymap)
+    {
+      Serial.println("D - Paste Special");
+
+      Keyboard.write(KEY_HOME);
+
+      Keyboard.press(KEY_LEFT_SHIFT);
+      Keyboard.press(KEY_END);
+      Keyboard.releaseAll();
+
+      Keyboard.write(KEY_DELETE);
+
+      Keyboard.press(KEY_LEFT_CTRL);
+      Keyboard.press('v');
+      Keyboard.releaseAll();
+    }
+    else
+    {
+      Serial.println("F16");
+      Keyboard.write(KEY_F16);
+    }
   }
 
 
