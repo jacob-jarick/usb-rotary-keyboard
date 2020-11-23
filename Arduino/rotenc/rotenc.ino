@@ -320,12 +320,3 @@ void macro_shift_fx(uint8_t fx)
   delay(50);
   Keyboard.releaseAll();
 }
-
-void macro_copy()
-{
-  Serial.println("A - Copy");
-  Keyboard.press(KEY_LEFT_CTRL);
-  Keyboard.press('c');
-  delay(50);
-  Keyboard.releaseAll();
-}
