@@ -16,10 +16,14 @@
 #include <CommonBusEncoders.h>
 CommonBusEncoders encoders(4, 6, 8, 4);
 
+const bool skyrim_photos = 1;
+
 const uint8_t keya = 19;
 const uint8_t keyb = 7;
 const uint8_t keyc = 22;
 const uint8_t keyd = 5;
+
+const int sky_inc = 300;
 
 const uint8_t dip1 = 23; // rflip (now paste special) - triggers keyC
 const uint8_t dip2 = 21; // mouse
@@ -27,7 +31,7 @@ const uint8_t dip3 = 20; // inc4
 
 const uint8_t key_debounce = 150;
 
-unsigned long keysleep[4] = {0, 0, 0, 0};
+unsigned long keysleep[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 // set to match your encoders.
 uint8_t rsteps = 2;
@@ -84,7 +88,14 @@ void loop()
   {
     keysleep[0] = millis() + key_debounce;
 
-    if (alt_keymap)
+    if (skyrim_photos)
+    {
+      Mouse.move(sky_inc * 2, 0, 0);
+      delay(100);
+      macro_shift_fx(12);
+      keysleep[0] = millis() + 750;
+    }
+    else if (alt_keymap)
       macro_copy();
     else
       macro_shift_fx(1);
@@ -93,7 +104,14 @@ void loop()
   {
     keysleep[1] = millis() + key_debounce;
 
-    if (alt_keymap)
+    if (skyrim_photos)
+    {
+      Mouse.move(0, sky_inc * -1, 0);
+      delay(100);
+      macro_shift_fx(12);
+      keysleep[1] = millis() + 750;
+    }
+    else if (alt_keymap)
       macro_cut();
     else
       macro_shift_fx(2);
@@ -129,111 +147,181 @@ void loop()
   // ----------------------------------------
   // Rotary 1 - media vol, up, down, mute
 
-  if (index == 101)
+  if (keysleep[4] < millis())
   {
-    if (rmouse)
-      Mouse.move(5, 0, 0);
-    else
-      Consumer.write(MEDIA_VOLUME_UP);
-  }
-  else if (index == 100)
-  {
-    if (rmouse)
-      Mouse.move(-5, 0, 0);
-    else
-      Consumer.write(MEDIA_VOLUME_DOWN);
-  }
-  else if (index == 199)
-  {
-    if (rmouse)
-      mousetoggle();
-    else
-      Consumer.write(MEDIA_VOLUME_MUTE);
+    if (index == 101)
+    {
+      keysleep[4] = millis() + key_debounce;
+
+      if (rmouse)
+      {
+        if (skyrim_photos)
+        {
+          Mouse.move(sky_inc * 2, 0, 0);
+          delay(100);
+          macro_shift_fx(12);
+        }
+        else
+        {
+          Mouse.move(5, 0, 0);
+        }
+      }
+      else
+        Consumer.write(MEDIA_VOLUME_UP);
+    }
+    else if (index == 100)
+    {
+      keysleep[4] = millis() + key_debounce;
+
+      if (rmouse)
+      {
+        if (skyrim_photos)
+        {
+          Mouse.move(sky_inc * -2, 0, 0);
+          delay(100);
+          macro_shift_fx(12);
+        }
+        else
+          Mouse.move(-5, 0, 0);
+      }
+      else
+        Consumer.write(MEDIA_VOLUME_DOWN);
+    }
+    else if (index == 199)
+    {
+      keysleep[4] = millis() + key_debounce;
+
+      if (rmouse)
+        mousetoggle();
+      else
+        Consumer.write(MEDIA_VOLUME_MUTE);
+    }
   }
 
   // ----------------------------------------
   // Rotary 2 - media, next, prev, play/pause
 
-  else if (index == 201)
+  if (keysleep[5] < millis())
   {
-    if (rmouse)
-      Mouse.move(0, 5, 0);
-    else
-      Consumer.write(MEDIA_NEXT);
-  }
-  else if (index == 200)
-  {
-    if (rmouse)
-      Mouse.move(0, -5, 0);
-    else
-      Consumer.write(MEDIA_PREVIOUS);
-  }
-  else if (index == 299)
-  {
-    if (rmouse)
+    if (index == 201)
     {
-      Mouse.release();
-      Mouse.click();
-    }
-    else
-      Consumer.write(MEDIA_PLAY_PAUSE);
-  }
+      keysleep[5] = millis() + key_debounce;
 
+      if (rmouse)
+      {
+        if (skyrim_photos)
+        {
+          Mouse.move(0, sky_inc, 0);
+          delay(100);
+          macro_shift_fx(12);
+        }
+        else
+          Mouse.move(0, 5, 0);
+      }
+      else
+        Consumer.write(MEDIA_NEXT);
+    }
+    else if (index == 200)
+    {
+      keysleep[5] = millis() + key_debounce;
+      if (rmouse)
+      {
+        if (skyrim_photos)
+        {
+          Mouse.move(0, sky_inc * -1, 0);
+          delay(100);
+          macro_shift_fx(12);
+        }
+        else
+          Mouse.move(0, -5, 0);
+      }
+      else
+        Consumer.write(MEDIA_PREVIOUS);
+    }
+    else if (index == 299)
+    {
+      keysleep[5] = millis() + key_debounce;
+      if (rmouse)
+      {
+        Mouse.release();
+        Mouse.click();
+      }
+      else
+        Consumer.write(MEDIA_PLAY_PAUSE);
+    }
+  }
   // ----------------------------------------
   // Rotary 3 - media ffwd, rwd, stop
 
-  else if (index == 301)
+  if (keysleep[6] < millis())
   {
-    if (rmouse)
-      Mouse.move(5, 5, 0);
-    else
-
-      Consumer.write(MEDIA_FAST_FORWARD);
-  }
-  else if (index == 300)
-  {
-    if (rmouse)
-      Mouse.move(-5, -5, 0);
-    else
-      Consumer.write(MEDIA_REWIND);
-  }
-  else if (index == 399)
-  {
-    if (rmouse)
+    if (index == 301)
     {
-      Mouse.release();
-      Mouse.click(MOUSE_RIGHT);
-    }
-    else
-      Consumer.write(MEDIA_STOP);
-  }
+      keysleep[6] = millis() + key_debounce;
 
+      if (rmouse)
+        Mouse.move(5, 5, 0);
+      else
+
+        Consumer.write(MEDIA_FAST_FORWARD);
+    }
+    else if (index == 300)
+    {
+      keysleep[6] = millis() + key_debounce;
+
+      if (rmouse)
+        Mouse.move(-5, -5, 0);
+      else
+        Consumer.write(MEDIA_REWIND);
+    }
+    else if (index == 399)
+    {
+      keysleep[6] = millis() + key_debounce;
+
+      if (rmouse)
+      {
+        Mouse.release();
+        Mouse.click(MOUSE_RIGHT);
+      }
+      else
+        Consumer.write(MEDIA_STOP);
+    }
+  }
   // ----------------------------------------
   // Rotary 4 - mplayer control
 
-  else if (index == 401)
+  if (keysleep[7] < millis())
   {
-    if (rmouse)
-      Mouse.move(-5, 5, 0);
-    else
-      Keyboard.write(KEY_RIGHT_ARROW);
-  }
-  else if (index == 400)
-  {
-    if (rmouse)
-      Mouse.move(5, -5, 0);
-    else
-      Keyboard.write(KEY_LEFT_ARROW);
-  }
-  else if (index == 499)
-  {
-    if (rmouse)
+    if (index == 401)
     {
-      Mouse.release();
-      Mouse.click(MOUSE_MIDDLE);
+      keysleep[7] = millis() + key_debounce;
+
+      if (rmouse)
+        Mouse.move(-5, 5, 0);
+      else
+        Keyboard.write(KEY_RIGHT_ARROW);
     }
-    else
-      Keyboard.write(' ');
+    else if (index == 400)
+    {
+      keysleep[7] = millis() + key_debounce;
+
+      if (rmouse)
+        Mouse.move(5, -5, 0);
+      else
+        Keyboard.write(KEY_LEFT_ARROW);
+    }
+    else if (index == 499)
+    {
+      keysleep[7] = millis() + key_debounce;
+
+      if (rmouse)
+      {
+        Mouse.release();
+        Mouse.click(MOUSE_MIDDLE);
+      }
+      else
+        Keyboard.write(' ');
+    }
   }
 }
 
@@ -305,7 +393,7 @@ void macro_paste_special()
 void macro_shift_fx(uint8_t fx)
 {
   Serial.println("F" + String(fx));
-  
+
   Keyboard.press(KEY_LEFT_SHIFT);
 
   if (fx == 1)
@@ -316,6 +404,8 @@ void macro_shift_fx(uint8_t fx)
     Keyboard.press(KEY_F3);
   else if (fx == 4)
     Keyboard.press(KEY_F4);
+  else if (fx == 12)
+    Keyboard.press(KEY_F12);
 
   delay(50);
   Keyboard.releaseAll();
